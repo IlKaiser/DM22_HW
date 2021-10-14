@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Dolphin stuff
+.directory
+
+# Beers
+beers.txt
