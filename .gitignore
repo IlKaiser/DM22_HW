@@ -133,3 +133,6 @@ dmypy.json
 
 # Beers
 beers.txt
+
+# Jobs
+jobs.txt
