@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 import re
 
+import threading
+
 from requests import Session
 
+lock = threading.Lock()
 
 URL = "https://www.kijiji.it/offerte-di-lavoro/offerta/informatica-e-web/"
 header = "https://www.kijiji.it"
@@ -20,7 +23,15 @@ a = 0
 
 def crawl(url):
     global a
-    visited.append(url)
+    global visited
+    
+    s= Session()
+    
+    with lock:
+        if(url in visited):
+            return
+        else:
+            visited.append(url)
     
     page = s.get(url)
     soup = BeautifulSoup(page.content, "html5lib")
@@ -53,11 +64,22 @@ def crawl(url):
 
     results = soup.findAll("span")
     
+    to_visit = []
+    
     for span in results:
         got_url = span.attrs.get("data-href")
         if( got_url != None and re.match("/offerte-di-lavoro\/offerta\/informatica-e-web\/*",got_url) ):
-            if((header + got_url) not in visited):
-                crawl(header + got_url)
+            with lock:
+                if((header + got_url) not in visited):
+                    to_visit.append(header + got_url)
+                    #crawl(header + got_url)
+    thread_pool = []
+    for utv in to_visit:
+        thread = threading.Thread(target = crawl, args = (utv,))
+        thread_pool.append(thread)
+        thread.start()
+    for thread in thread_pool:    
+        thread.join()
 
 
 crawl(URL)
