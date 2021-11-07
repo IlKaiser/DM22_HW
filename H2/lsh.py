@@ -4,7 +4,6 @@ import math
 import time
 
 import numpy as np
-from scipy.sparse import csr_matrix
 
 four_bytes = 2**32-1
 
@@ -69,9 +68,7 @@ class LSH:
         for i in range(0,len(signature_matrix)):
             for j in range(0,len(signature_matrix[i]),r):
                 concat = b''
-                #print("j: "+str(j))
                 for k in range(j,min(j+r,len(signature_matrix[i]))):
-                    #print(i,k)
                     concat += signature_matrix[i][k]
                 hash_ = hashlib.sha1(concat).digest()[-4:]
                 hashes.append([hash_,i,j])
@@ -94,9 +91,7 @@ class LSH:
 def jaccard_sim(l1,l2):
     s1 = set(l1)
     s2 = set(l2)
-    #print("s1: "+ str(s1))
-    #print("s2: "+ str(s2))
-    
+   
     union = s1.union(s2)
     intersection = s1.intersection(s2)
     
@@ -108,8 +103,9 @@ mh = MinHash()
 lsh = LSH()
 
 
-import pandas as pd
+# Test on actual data
 
+import pandas as pd
 
 
 df = pd.read_csv("jobs.txt",delimiter='\t',names = ["title","desc","loc","time","href"])
@@ -132,7 +128,7 @@ print()
 print("Lsh")
 print()
 time_l = time.time()
-cnd = lsh.lsh_candidates(signatures,20,5)
+cnd = lsh.lsh_candidates(signatures,20,int(2712/20))
 time_lsh = time.time() - time_l
 
 final_js=[]
