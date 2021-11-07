@@ -136,3 +136,13 @@ beers.txt
 
 # Jobs
 jobs.txt
+
+# Indexes
+inverted_index.txt
+idf.txt
+tfidf.txt
+ 
+# Labs
+Spark.ipynb
+joyce.txt
+
