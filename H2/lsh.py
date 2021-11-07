@@ -133,9 +133,12 @@ time_lsh = time.time() - time_l
 
 final_js=[]
 for item in cnd:
-    final_js.append([item[0],item[1],jaccard_sim(jobs[item[0]],jobs[item[1]])])
+    js = jaccard_sim(jobs[item[0]],jobs[item[1]])
+    if(js >= 0.8):
+        final_js.append([item[0],item[1],js])
                      
 sorted_res = sorted(final_js, key = lambda item: item[2],reverse=True)[:20]
+
 
 print("#########Final res ##############")
 
@@ -150,7 +153,9 @@ for key1 in jobs:
     for key2 in jobs:
         print("Brute force similarity: "+str("{:.9f}".format(cnt/(len(jobs)**2-1) * 100)) + "%",end="\r")
         if(key1!=key2):
-            bf.append([item[0],item[1],jaccard_sim(jobs[key1],jobs[key2])])
+            js = jaccard_sim(jobs[item[0]],jobs[item[1]])
+            if(js >= 0.8):
+                bf.append([item[0],item[1],js])
         cnt += 1
 
 time_bruteforce = time.time() - time_b
@@ -161,7 +166,21 @@ for item in sorted_res:
     print("title1: " + df.iloc[item[0],0]+" title2: "+df.iloc[item[1],0]+" score(similarity): "+ str(item[2]))
 
 
+def intersection_(l1,l2):
+    int_c = 0
+    for item in l1:
+        if item in l2:
+            int_c += 1
+    return int_c
 print()
+print()
+print("##############   REPORT ######################")
+
+print("Total LSH candidates  found: " +str(len(cnd)))
+print("Total LSH matches found: " +str(len(final_js)))
+print("Total brute force matches found: " +str(len(bf)))
+print("Intersection : " +str(intersection_(final_js,bf)))
+
 print()
 print("Elapsed times: ")
 

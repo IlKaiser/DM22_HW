@@ -146,11 +146,14 @@ ksh.persist()
 ksh.count()
 cntr = 0
 for item in cnd:
+    
     print("lsh similarity: "+str("{:.9f}".format(cntr/(len(cnd)-1) * 100)) + "%",end="\r")
     one = ksh.filter(ksh.index == item[0]).select("index","shingles").collect()[0]['shingles']
-    
+        
     two = ksh.filter(ksh.index == item[1]).select("index","shingles").collect()[0]['shingles']
-    final_js.append([item[0],item[1],jaccard_sim(one,two)])
+    js = jaccard_sim(one,two)
+    if(js >= 0.8):
+        final_js.append([item[0],item[1],js])
     cntr += 1
 
 sorted_res = sorted(final_js, key = lambda item: item[2],reverse=True)[:20]
@@ -168,6 +171,10 @@ for item in sorted_res:
 
 print("Elapsed times: ")
 
+print("Total LSH candidates  found: " +str(len(cnd)))
+print("Hit: "+ str(len(final_js)))
+
+
 print("Min Hash time: "+ str(time_minhash))
 print("LSH time: "+ str(time_lsh))
 
@@ -177,11 +184,12 @@ ksh2 = ksh.alias('ksh2')
 
 joint = ksh1.join(ksh2, ksh1.index != ksh2.index, 'outer').toDF('sh1','id1','sh2','id2')
 
-joint.show(5)
+
 #joint.persist()
 #joint.count()
 
 joint = joint.rdd.map(lambda x: (x["sh1"], x["id1"],x["sh2"], x["id2"], jaccard_sim(x["sh1"],x["sh2"]))).toDF(['sh1','id1','sh2','id2','sim'])
 joint = joint.sort(col('sim').desc())
+joint = joint.filter(joint.sim > 0.8).collect()
 
-joint.show(20)
+#joint.show(20)
