@@ -146,6 +146,7 @@ for item in sorted_res:
     print("title1: " + df.iloc[item[0],0]+" title2: "+df.iloc[item[1],0]+" score(similarity): "+ str(item[2]))
 
 print("Brute force")
+print("Items to anlyze: "+ str(len(jobs)**2))
 bf = []
 cnt = 0
 time_b = time.time()
@@ -153,9 +154,9 @@ for key1 in jobs:
     for key2 in jobs:
         print("Brute force similarity: "+str("{:.9f}".format(cnt/(len(jobs)**2-1) * 100)) + "%",end="\r")
         if(key1!=key2):
-            js = jaccard_sim(jobs[item[0]],jobs[item[1]])
+            js = jaccard_sim(jobs[key1],jobs[key2])
             if(js >= 0.8):
-                bf.append([item[0],item[1],js])
+                bf.append([key1,key2,js])
         cnt += 1
 
 time_bruteforce = time.time() - time_b
