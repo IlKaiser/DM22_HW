@@ -121,7 +121,7 @@ def lsh_candidates(signature_matrix,r,b):
 
 print("LSH...")
 time_l = time.time()
-cnd  = lsh_candidates(og_signature_matrix,20,5)
+cnd  = lsh_candidates(og_signature_matrix,10,int(2712/20))
 time_lsh = time.time() -time_l
 cnd_20 = cnd[:20]
 print("LSH done!")
@@ -171,13 +171,14 @@ for item in sorted_res:
 
 print("Elapsed times: ")
 
-print("Total LSH candidates  found: " +str(len(cnd)))
-print("Hit: "+ str(len(final_js)))
+print("Total LSH candidates found: " +str(len(cnd)))
+print("Hit: "+ str(len(final_js))+" (of 2965)")
 
 
 print("Min Hash time: "+ str(time_minhash))
 print("LSH time: "+ str(time_lsh))
 
+'''
 print("Brute force")
 ksh1 = ksh.alias('ksh1')
 ksh2 = ksh.alias('ksh2')
@@ -193,3 +194,4 @@ joint = joint.sort(col('sim').desc())
 joint = joint.filter(joint.sim > 0.8).collect()
 
 #joint.show(20)
+'''

@@ -128,7 +128,7 @@ print()
 print("Lsh")
 print()
 time_l = time.time()
-cnd = lsh.lsh_candidates(signatures,20,int(2712/20))
+cnd = lsh.lsh_candidates(signatures,r=10,b=int(2712/20))
 time_lsh = time.time() - time_l
 
 final_js=[]
@@ -144,6 +144,9 @@ print("#########Final res ##############")
 
 for item in sorted_res:
     print("title1: " + df.iloc[item[0],0]+" title2: "+df.iloc[item[1],0]+" score(similarity): "+ str(item[2]))
+    
+print("Total LSH candidates  found: " +str(len(cnd)))
+print("Total LSH matches found: " +str(len(final_js)))
 
 print("Brute force")
 print("Items to anlyze: "+ str(len(jobs)**2))
