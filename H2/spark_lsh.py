@@ -178,7 +178,7 @@ print("Hit: "+ str(len(final_js))+" (of 2965)")
 print("Min Hash time: "+ str(time_minhash))
 print("LSH time: "+ str(time_lsh))
 
-'''
+
 print("Brute force")
 ksh1 = ksh.alias('ksh1')
 ksh2 = ksh.alias('ksh2')
@@ -190,8 +190,7 @@ joint = ksh1.join(ksh2, ksh1.index != ksh2.index, 'outer').toDF('sh1','id1','sh2
 #joint.count()
 
 joint = joint.rdd.map(lambda x: (x["sh1"], x["id1"],x["sh2"], x["id2"], jaccard_sim(x["sh1"],x["sh2"]))).toDF(['sh1','id1','sh2','id2','sim'])
-joint = joint.sort(col('sim').desc())
-joint = joint.filter(joint.sim > 0.8).collect()
 
-#joint.show(20)
-'''
+joint = joint.filter(joint.sim > 0.8)
+joint = joint.orderBy('sim',ascending=False)
+joint.collect()
