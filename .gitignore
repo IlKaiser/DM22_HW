@@ -146,3 +146,8 @@ tfidf.txt
 Spark.ipynb
 joyce.txt
 
+# H4 material
+all_gene_disease_associations.tsv
+Biogrid_4.4.199_Hs.txt
+Biogrid_REDUX.txt
+
